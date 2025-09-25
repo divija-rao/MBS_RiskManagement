@@ -1,0 +1,40 @@
+import os
+
+# Input file and output directory
+input_file = "extracted_data/merged_loans_2014_2024.csv"
+output_dir = "extracted_data/splits"
+max_bytes = 1_900_000_000  # ~1.9GB per file (safely under GitHub's 2GB limit)
+
+os.makedirs(output_dir, exist_ok=True)
+
+with open(input_file, "r", encoding="utf-8") as infile:
+    header = infile.readline()
+    
+    file_index = 1
+    out_path = os.path.join(output_dir, f"merged_loans_part_{file_index}.csv")
+    outfile = open(out_path, "w", encoding="utf-8")
+    outfile.write(header)
+    
+    current_size = len(header.encode("utf-8"))
+
+    for line in infile:
+        line_size = len(line.encode("utf-8"))
+        
+        # If adding this line would exceed limit, start a new file
+        if current_size + line_size > max_bytes:
+            outfile.close()
+            print(f"Created: {out_path} ({current_size/1e6:.1f} MB)")
+            
+            file_index += 1
+            out_path = os.path.join(output_dir, f"merged_loans_part_{file_index}.csv")
+            outfile = open(out_path, "w", encoding="utf-8")
+            outfile.write(header)
+            current_size = len(header.encode("utf-8"))
+        
+        outfile.write(line)
+        current_size += line_size
+
+    outfile.close()
+    print(f"Created: {out_path} ({current_size/1e6:.1f} MB)")
+
+print("Splitting complete!")
