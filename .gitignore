@@ -12,4 +12,4 @@ __pycache__/
 .DS_Store
 
 # csv files in raw data directory
-data/raw/*.csv
+data/raw/loans_combined.csv
