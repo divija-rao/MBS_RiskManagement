@@ -2,3 +2,4 @@
 __pycache__/
 *.pyc
 .DS_Store
+git-lfs-3.7.0/
