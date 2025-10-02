@@ -10,3 +10,6 @@ __pycache__/
 
 # macOS Finder files
 .DS_Store
+
+# csv files in raw data directory
+data/raw/*.csv
