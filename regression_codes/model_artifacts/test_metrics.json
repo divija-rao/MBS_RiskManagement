@@ -1,1 +1,1 @@
-{"test_period":"2024_H2","n_test":12159925,"default_rate":0.0147852063,"roc_auc":0.7355149315,"pr_auc":0.0477663779,"precision_5pct":0.0642733435,"recall_5pct":0.217357206,"threshold_95":0.0295321984}
+{"test_period":"2024_H2","n_test":12159925,"default_rate":0.0147852063,"roc_auc":0.7155564479,"pr_auc":0.0440441236,"precision_5pct":0.0602042444,"recall_5pct":0.2035964781,"threshold_95":0.0265174234}
