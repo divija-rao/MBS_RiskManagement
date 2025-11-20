@@ -14,6 +14,7 @@ from pptx.util import Inches, Pt
 from pptx.enum.text import PP_ALIGN, MSO_ANCHOR, MSO_AUTO_SIZE
 from pptx.dml.color import RGBColor
 from pptx.enum.shapes import MSO_SHAPE
+from datetime import datetime
 
 def add_gradient_background(slide, color1, color2):
     """Add a gradient background to a slide"""
@@ -84,6 +85,9 @@ def create_presentation():
     
     WHITE = RGBColor(255, 255, 255)
     
+    # Get current date or use presentation date
+    presentation_date = "November 19, 2025"
+    
     # ========== SLIDE 1: TITLE SLIDE ==========
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     add_gradient_background(slide, BLUE_900, BLUE_800)
@@ -133,7 +137,7 @@ def create_presentation():
     # Author info
     author_box = slide.shapes.add_textbox(Inches(2), Inches(5.6), Inches(6), Inches(1.2))
     author_frame = author_box.text_frame
-    author_frame.text = "Divija Rao Balasankula\nFINANCIAL MATHEMATICS\nNovember 19, 2025"
+    author_frame.text = f"Divija Rao Balasankula\nFINANCIAL MATHEMATICS\n{presentation_date}"
     for para in author_frame.paragraphs:
         para.font.size = Pt(20)
         para.font.color.rgb = BLUE_300
@@ -197,7 +201,7 @@ def create_presentation():
     crisis_text.paragraphs[4].alignment = PP_ALIGN.CENTER
     crisis_text.vertical_anchor = MSO_ANCHOR.MIDDLE
     
-    # Goal Box - Gradient effect with shadow
+    # Goal Box
     goal_box = create_rounded_rectangle(
         slide, Inches(1.5), Inches(4.8), Inches(7), Inches(1.2),
         BLUE_600
@@ -210,9 +214,6 @@ def create_presentation():
     goal_para.font.color.rgb = WHITE
     goal_para.alignment = PP_ALIGN.CENTER
     goal_text.vertical_anchor = MSO_ANCHOR.MIDDLE
-    
-    # Add shadow effect
-    goal_box.shadow.inherit = False
     
     # ========== SLIDE 3: APPROACH ==========
     slide = prs.slides.add_slide(prs.slide_layouts[6])
@@ -295,7 +296,7 @@ def create_presentation():
     data_points = [
         ("20.32M", "Records", "💾", BLUE_500, BLUE_600),
         ("20", "Features\nEngineered", "📊", PURPLE_500, PURPLE_600),
-        ("0.8-1%", "Default\nRate", "🎯", PINK_500, PINK_600)
+        ("0.32%", "Default\nRate (OOT)", "🎯", PINK_500, PINK_600)
     ]
     
     x_pos = 1.2
@@ -333,13 +334,13 @@ def create_presentation():
     
     # Info banner
     info_box = create_rounded_rectangle(
-        slide, Inches(1), Inches(5), Inches(8), Inches(0.9),
+        slide, Inches(0.8), Inches(5), Inches(8.4), Inches(0.9),
         SLATE_800
     )
     info_text = info_box.text_frame
-    info_text.text = "📅 Period: 2013-2024  |  ⚠️ Challenge: Extreme Class Imbalance (1:99)"
+    info_text.text = "📅 Period: 2013 - March 2025  |  ⚠️ Challenge: Extreme Class Imbalance"
     info_para = info_text.paragraphs[0]
-    info_para.font.size = Pt(22)
+    info_para.font.size = Pt(20)
     info_para.font.bold = True
     info_para.font.color.rgb = WHITE
     info_para.alignment = PP_ALIGN.CENTER
@@ -361,7 +362,7 @@ def create_presentation():
     splits = [
         ("Training", "≤ Dec 2023", "7.87M records", BLUE_500),
         ("Validation", "Jan-Jun 2024", "295K records", PURPLE_500),
-        ("Test", "Jul 2024+", "12.2M records", PINK_500)
+        ("Test", "Jul 2024 - Mar 2025", "12.16M records", PINK_500)
     ]
     
     y_pos = 1.9
@@ -488,12 +489,11 @@ def create_presentation():
     
     steps = [
         ("1", "Preprocessing", "Median imputation → Standard scaling → One-hot encoding"),
-        ("2", "Model Training", "Logistic Regression with balanced class weights + L1/L2 regularization"),
-        ("3", "Hyperparameter Tuning", "Cross-validated grid search on training data"),
-        ("4", "Calibration", "Platt scaling on validation set for reliable probabilities")
+        ("2", "Model Training", "Logistic Regression with L2 regularization (solver='lbfgs')"),
+        ("3", "Calibration", "Platt scaling (CalibratedClassifierCV) on validation set")
     ]
     
-    y_pos = 1.7
+    y_pos = 2.2
     for num, step_name, detail in steps:
         # Number circle with gradient
         circle = slide.shapes.add_shape(
@@ -532,7 +532,7 @@ def create_presentation():
         text_frame.paragraphs[1].font.color.rgb = SLATE_600
         
         # Arrow (except for last step)
-        if num != "4":
+        if num != "3":
             arrow = slide.shapes.add_shape(
                 MSO_SHAPE.DOWN_ARROW,
                 Inches(1.4), Inches(y_pos + 0.9), Inches(0.2), Inches(0.3)
@@ -541,38 +541,52 @@ def create_presentation():
             arrow.fill.fore_color.rgb = BLUE_500
             arrow.line.fill.background()
         
-        y_pos += 1.3
+        y_pos += 1.5
     
     # ========== SLIDE 8: RESULTS ==========
     slide = prs.slides.add_slide(prs.slide_layouts[6])
     add_gradient_background(slide, SLATE_50, SLATE_100)
     
     # Title
-    title_box = slide.shapes.add_textbox(Inches(0.5), Inches(0.4), Inches(9), Inches(0.7))
+    title_box = slide.shapes.add_textbox(Inches(0.5), Inches(0.3), Inches(9), Inches(0.7))
     title_frame = title_box.text_frame
-    title_frame.text = "Out-of-Time Performance (H2 2024+)"
+    title_frame.text = "Out-of-Time Performance (Jul 2024 - Mar 2025)"
     title_para = title_frame.paragraphs[0]
-    title_para.font.size = Pt(42)
+    title_para.font.size = Pt(38)
     title_para.font.bold = True
     title_para.font.color.rgb = SLATE_800
     
+    # Test info banner
+    info_banner = create_rounded_rectangle(
+        slide, Inches(0.8), Inches(1.1), Inches(8.4), Inches(0.6),
+        BLUE_100
+    )
+    info_text = info_banner.text_frame
+    info_text.text = "Test: 12.16M loans  |  Default Rate: 0.32%"
+    info_para = info_text.paragraphs[0]
+    info_para.font.size = Pt(18)
+    info_para.font.bold = True
+    info_para.font.color.rgb = BLUE_900
+    info_para.alignment = PP_ALIGN.CENTER
+    info_text.vertical_anchor = MSO_ANCHOR.MIDDLE
+    
     metrics = [
-        ("70.05%", "ROC-AUC", GREEN_500, GREEN_600),
-        ("4.66%", "Precision\n@ 95th %ile", BLUE_500, BLUE_600),
-        ("23.8%", "Recall\n@ 95th %ile", PURPLE_500, PURPLE_600),
-        ("6×", "Lift vs\nBaseline", ORANGE_500, ORANGE_600)
+        ("82.82%", "ROC-AUC", GREEN_500, GREEN_600),
+        ("2.01%", "Precision\n@ 95th %ile", BLUE_500, BLUE_600),
+        ("31.0%", "Recall\n@ 95th %ile", PURPLE_500, PURPLE_600),
+        ("6.2×", "Lift vs\nBaseline", ORANGE_500, ORANGE_600)
     ]
     
     x_pos = 1
     for value, label, color1, color2 in metrics:
         box = create_rounded_rectangle(
-            slide, Inches(x_pos), Inches(1.9), Inches(2), Inches(2),
+            slide, Inches(x_pos), Inches(2.1), Inches(2), Inches(2),
             WHITE, color1, 5
         )
         box.shadow.inherit = False
         
         # Value
-        val_text = slide.shapes.add_textbox(Inches(x_pos + 0.1), Inches(2.2), Inches(1.8), Inches(0.7))
+        val_text = slide.shapes.add_textbox(Inches(x_pos + 0.1), Inches(2.4), Inches(1.8), Inches(0.7))
         val_frame = val_text.text_frame
         val_frame.text = value
         val_para = val_frame.paragraphs[0]
@@ -582,7 +596,7 @@ def create_presentation():
         val_para.alignment = PP_ALIGN.CENTER
         
         # Label
-        label_text = slide.shapes.add_textbox(Inches(x_pos + 0.1), Inches(3), Inches(1.8), Inches(0.7))
+        label_text = slide.shapes.add_textbox(Inches(x_pos + 0.1), Inches(3.2), Inches(1.8), Inches(0.7))
         label_frame = label_text.text_frame
         label_frame.text = label
         label_para = label_frame.paragraphs[0]
@@ -594,11 +608,11 @@ def create_presentation():
     
     # Insight box
     insight_box = create_rounded_rectangle(
-        slide, Inches(1), Inches(4.7), Inches(8), Inches(1.1),
+        slide, Inches(1), Inches(4.9), Inches(8), Inches(1.1),
         GREEN_100, GREEN_500, 3
     )
     insight_text = insight_box.text_frame
-    insight_text.text = "💡 Model successfully ranks future defaults in a rising-rate environment"
+    insight_text.text = "💡 Extremely strong ranking power sustained into 2025"
     insight_para = insight_text.paragraphs[0]
     insight_para.font.size = Pt(24)
     insight_para.font.bold = True
@@ -620,19 +634,20 @@ def create_presentation():
     title_para.font.color.rgb = SLATE_800
     
     drivers = [
-        (1, "Fed Funds Rate at Origination", "2022-23 vintages are riskiest", 3.17, 1.0),
-        (2, "30-yr Mortgage Rate at Origination", "High-rate environment = high risk", 1.15, 0.36),
-        (3, "Original Interest Rate", "Direct borrower cost impact", 0.85, 0.27),
-        (4, "HPI YoY Change at Origination", "Negative momentum signals distress", 0.72, 0.23),
-        (5, "Loan Age", "Seasoning effect", 0.68, 0.21),
-        (6, "Credit Score", "Important but not dominant", 0.54, 0.17)
+        (1, "Fed Funds Rate at Origination",       "2022–23 high-rate vintages are by far the riskiest",          0.90, 1.00),
+        (2, "Original Interest Rate",              "Higher note rate = massive payment shock driver",             0.74, 0.82),
+        (3, "In Negative Equity",                  "Underwater loans usually toxic, but some recent vintages paradoxically safer", 0.60, 0.67),
+        (4, "Credit Score",                        "Important but overtaken by macro rate environment",           0.53, 0.59),
+        (5, "Single Borrower (Num_Borrowers = 1)", "Solo borrowers default more often than co-borrowers",         0.33, 0.37),
+        (6, "LTV (current)",                       "Higher LTV → higher risk, especially when >100%",             0.24, 0.27),
+        (7, "DTI at Origination",                  "Higher debt burden at start → higher default risk up",           0.23, 0.26)
     ]
     
-    y_pos = 1.25
+    y_pos = 1.35
     for rank, name, insight, impact, normalized in drivers:
         # Main box
         box = create_rounded_rectangle(
-            slide, Inches(0.7), Inches(y_pos), Inches(8.6), Inches(0.7),
+            slide, Inches(0.7), Inches(y_pos), Inches(8.6), Inches(0.8),
             WHITE
         )
         box.shadow.inherit = False
@@ -640,7 +655,7 @@ def create_presentation():
         # Rank circle
         rank_circle = slide.shapes.add_shape(
             MSO_SHAPE.OVAL,
-            Inches(0.9), Inches(y_pos + 0.1), Inches(0.5), Inches(0.5)
+            Inches(0.9), Inches(y_pos + 0.15), Inches(0.5), Inches(0.5)
         )
         rank_circle.fill.solid()
         rank_circle.fill.fore_color.rgb = PURPLE_600 if rank <= 3 else PURPLE_500
@@ -656,18 +671,18 @@ def create_presentation():
         rank_text.vertical_anchor = MSO_ANCHOR.MIDDLE
         
         # Driver name and insight
-        text_box = slide.shapes.add_textbox(Inches(1.6), Inches(y_pos + 0.08), Inches(5.5), Inches(0.54))
+        text_box = slide.shapes.add_textbox(Inches(1.6), Inches(y_pos + 0.1), Inches(5.5), Inches(0.6))
         text_frame = text_box.text_frame
         text_frame.text = f"{name}  •  {insight}"
         text_para = text_frame.paragraphs[0]
-        text_para.font.size = Pt(13)
+        text_para.font.size = Pt(14)
         text_para.font.bold = True if rank <= 3 else False
         text_para.font.color.rgb = SLATE_800
         
         # Impact bar background
         bar_bg = slide.shapes.add_shape(
             MSO_SHAPE.ROUNDED_RECTANGLE,
-            Inches(7.3), Inches(y_pos + 0.2), Inches(1.5), Inches(0.3)
+            Inches(7.3), Inches(y_pos + 0.25), Inches(1.5), Inches(0.3)
         )
         bar_bg.fill.solid()
         bar_bg.fill.fore_color.rgb = SLATE_200
@@ -678,21 +693,21 @@ def create_presentation():
         if bar_width > 0.1:
             bar_fill = slide.shapes.add_shape(
                 MSO_SHAPE.ROUNDED_RECTANGLE,
-                Inches(7.3), Inches(y_pos + 0.2), Inches(bar_width), Inches(0.3)
+                Inches(7.3), Inches(y_pos + 0.25), Inches(bar_width), Inches(0.3)
             )
             bar_fill.fill.solid()
             bar_fill.fill.fore_color.rgb = PURPLE_500
             bar_fill.line.fill.background()
         
         # Impact value
-        impact_text = slide.shapes.add_textbox(Inches(8.9), Inches(y_pos + 0.15), Inches(0.3), Inches(0.4))
+        impact_text = slide.shapes.add_textbox(Inches(8.9), Inches(y_pos + 0.2), Inches(0.35), Inches(0.4))
         impact_frame = impact_text.text_frame
         impact_frame.text = f"{impact:.2f}"
         impact_para = impact_frame.paragraphs[0]
         impact_para.font.size = Pt(11)
         impact_para.font.color.rgb = SLATE_600
         
-        y_pos += 0.8
+        y_pos += 0.95
     
     # Key finding box
     finding_box = create_rounded_rectangle(
@@ -700,7 +715,7 @@ def create_presentation():
         ORANGE_100, ORANGE_500, 3
     )
     finding_text = finding_box.text_frame
-    finding_text.text = "💡 Macro conditions at origination matter MORE than borrower credit score"
+    finding_text.text = "💡 Macro + negative equity now dominate over pure credit score"
     finding_para = finding_text.paragraphs[0]
     finding_para.font.size = Pt(22)
     finding_para.font.bold = True
@@ -722,11 +737,11 @@ def create_presentation():
     title_para.font.color.rgb = SLATE_800
     
     insights = [
-        ("📈", "2022-2023 vintages show significantly higher risk due to rate environment"),
-        ("🌍", "Origination macro conditions dominate over borrower characteristics"),
-        ("🏠", "Negative house price momentum is a strong default predictor"),
-        ("⚖️", "Judicial foreclosure states show moderately elevated risk"),
-        ("💳", "Credit score matters, but ranks 6th among all drivers")
+        ("📈", "2021-2023 vintages (high-rate environment) are by far the riskiest"),
+        ("🌍", "Macro conditions at origination matter more than borrower credit score"),
+        ("🏠", "Negative house-price momentum at origination is a strong default signal"),
+        ("⚖️", "Judicial foreclosure states show moderately higher risk"),
+        ("💳", "Credit score drops to 4th strongest driver (from 6th in initial model)")
     ]
     
     y_pos = 1.8
@@ -751,7 +766,7 @@ def create_presentation():
         text_frame = text_box.text_frame
         text_frame.text = text
         text_para = text_frame.paragraphs[0]
-        text_para.font.size = Pt(18)
+        text_para.font.size = Pt(17)
         text_para.font.color.rgb = SLATE_700
         text_frame.vertical_anchor = MSO_ANCHOR.MIDDLE
         
@@ -862,10 +877,10 @@ def create_presentation():
     
     achievements = [
         "Built transparent default model on 20M+ real loan-month records",
-        "Strict temporal split ensures credible out-of-time performance",
+        "True out-of-time ROC-AUC 82.82% on 2024 H2-2025 Q1 data",
+        "Top-5% precision 2.01% (6.2× lift) at only 0.32% baseline default rate",
         "Macro origination conditions (Fed Funds & mortgage rates) dominate risk",
-        "Production-ready: pickled pipeline + 95th percentile threshold",
-        "End-to-end data science: engineering → modeling → validation → insights"
+        "Production-ready: pickled pipeline + 95th percentile threshold saved"
     ]
     
     y_pos = 1.7
@@ -900,7 +915,7 @@ def create_presentation():
         text_frame = text_box.text_frame
         text_frame.text = achievement
         text_para = text_frame.paragraphs[0]
-        text_para.font.size = Pt(18)
+        text_para.font.size = Pt(17)
         text_para.font.bold = True
         text_para.font.color.rgb = WHITE
         text_frame.vertical_anchor = MSO_ANCHOR.MIDDLE
@@ -949,12 +964,17 @@ def create_presentation():
     
     # Save presentation
     prs.save('Mortgage_Default_Risk_Modeling.pptx')
-    print("=" * 60)
-    print("✓ Presentation created successfully!")
-    print("=" * 60)
+    print("=" * 70)
+    print("✓ PRESENTATION CREATED SUCCESSFULLY!")
+    print("=" * 70)
     print(f"📄 File: Mortgage_Default_Risk_Modeling.pptx")
     print(f"📊 Total slides: {len(prs.slides)}")
-    print("=" * 60)
+    print(f"🎨 Enhanced design with updated metrics:")
+    print(f"   • ROC-AUC: 82.82%")
+    print(f"   • Test Period: Jul 2024 - Mar 2025")
+    print(f"   • Default Rate: 0.32%")
+    print(f"   • Top-5% Precision: 2.01% (6.2× lift)")
+    print("=" * 70)
 
 if __name__ == "__main__":
     create_presentation()
